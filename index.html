@@ -85,6 +85,18 @@ button.cta[disabled]{opacity:.6}
 .seguro{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;color:var(--muted);font-size:13px;text-align:center}
 .error{color:var(--danger);font-size:14px;margin-top:10px}
 .hp{position:absolute;left:-9999px}
+.vivo{display:inline-flex;align-items:center;gap:12px;margin:14px auto 6px;padding:10px 18px 10px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);position:relative}
+.vivo[hidden]{display:none}
+.vivo .num{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:36px;line-height:1;font-variant-numeric:tabular-nums;display:inline-block}
+.vivo .txt{font-size:15px;text-align:left;line-height:1.2;max-width:120px;opacity:.95}
+.vivo .punto{flex:none;width:10px;height:10px;border-radius:50%;background:#7CF0B5;animation:latido 1.6s infinite}
+@keyframes latido{0%{box-shadow:0 0 0 0 rgba(124,240,181,.75)}70%{box-shadow:0 0 0 11px rgba(124,240,181,0)}100%{box-shadow:0 0 0 0 rgba(124,240,181,0)}}
+.vivo.sube .num{animation:sube .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes sube{0%{transform:translateY(10px);opacity:.2}100%{transform:none;opacity:1}}
+.vivo .mas{position:absolute;right:14px;top:-6px;font-size:13px;font-weight:600;color:#7CF0B5;opacity:0}
+.vivo.sube .mas{animation:mas 1.4s ease forwards}
+@keyframes mas{0%{opacity:0;transform:translateY(4px)}25%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
+@media (prefers-reduced-motion:reduce){.vivo .punto,.vivo.sube .num,.vivo.sube .mas{animation:none}}
 .contador{text-align:center;color:var(--muted);font-size:14px;margin-top:10px}
 .ok{text-align:center;display:none}
 .ok .nahu{width:130px;height:130px;margin:0 auto}
@@ -172,6 +184,7 @@ footer a{color:var(--teal)}
 <body>
 <header class="hero" id="arriba">
   <div class="marca">MONTESBIO AQUA</div>
+  <div class="vivo" id="vivo" hidden aria-live="polite"><span class="punto" aria-hidden="true"></span><span class="num" id="vivoNum">0</span><span class="txt" id="vivoTxt">fundadores ya apuntados</span><span class="mas" id="vivoMas"></span></div>
   <div class="nahu"><svg class="nahu-svg" viewBox="-30 -20 260 260" role="img" aria-label="Nahu, el ajolote de MontesBio"><defs><linearGradient id="ac" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2C9184"/><stop offset="1" stop-color="#14524C"/></linearGradient><linearGradient id="ah" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2C9184"/><stop offset=".75" stop-color="#1B6B63"/><stop offset="1" stop-color="#14524C"/></linearGradient></defs>
 <ellipse class="n-sombra" cx="100" cy="212" rx="54" ry="9" fill="rgba(15,46,43,.18)"/>
 <g class="n-todo">
@@ -364,12 +377,27 @@ footer a{color:var(--teal)}
   try{var ua=navigator.userAgent;if(/iPhone|iPad|iPod/.test(ua))document.getElementById('p-ios').checked=true;else if(/Android/.test(ua))document.getElementById('p-and').checked=true}catch(e){}
 
   var f=document.getElementById('f'),err=document.getElementById('error'),btn=document.getElementById('enviar'),btnTxt=btn.innerHTML;
+  // Contador en directo: se actualiza solo cada 15 s y anima cuando alguien se apunta
+  var actual=null;
+  function animarA(desde,hasta){
+    var el=document.getElementById('vivoNum'),t0=null,dur=Math.min(1200,300+Math.abs(hasta-desde)*40);
+    function paso(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,3);el.textContent=Math.round(desde+(hasta-desde)*e).toLocaleString('es-ES');if(k<1)requestAnimationFrame(paso)}
+    requestAnimationFrame(paso);
+  }
   function contar(){
     fetch(SUPABASE_URL+'/rest/v1/rpc/contar_lista_espera',{method:'POST',headers:H,body:'{}'}).then(function(r){return r.ok?r.json():null}).then(function(n){
-      if(typeof n==='number'&&n>=25){document.getElementById('contador').textContent='Ya somos '+n.toLocaleString('es-ES')+' fundadores en la lista.'}
+      if(typeof n!=='number')return;
+      var v=document.getElementById('vivo'),txt=document.getElementById('vivoTxt');
+      v.hidden=false;
+      txt.textContent=n===0?'Sé de los primeros fundadores':n===1?'fundador ya apuntado':'fundadores ya apuntados';
+      if(actual===null){animarA(0,n)}
+      else if(n>actual){document.getElementById('vivoMas').textContent='+'+(n-actual);v.classList.remove('sube');void v.offsetWidth;v.classList.add('sube');animarA(actual,n)}
+      actual=n;
+      document.getElementById('contador').textContent=n>0?('Ya somos '+n.toLocaleString('es-ES')+(n===1?' fundador':' fundadores')+' en la lista.'):'';
     }).catch(function(){});
   }
   contar();
+  setInterval(function(){if(!document.hidden)contar()},15000);
   f.addEventListener('submit',function(e){
     e.preventDefault();err.textContent='';
     if(f.web.value)return;
