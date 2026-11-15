@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>¿Has visto a Kiko? · MontesBio</title>
+<meta name="description" content="Kiko no se ha perdido. Pero muchos peces no pasan de su primer mes. MontesBio te ayuda a que no le pase al tuyo.">
+<meta property="og:title" content="¿Has visto a Kiko?"><meta property="og:description" content="La app para que no se te muera ni un pez.">
+<style>
+/* =====================================================================
+   CONFIGURACIÓN: lo único que hay que tocar para cambiar la campaña.
+   El QR siempre apunta a esta página, así que nunca hay que reimprimir.
+   ===================================================================== */
+</style>
+<script>
+const CONFIG = {
+  tema: 'normal',            // 'normal' | 'halloween' | 'navidad'
+  ios: 'https://apps.apple.com/es/app/id6832741731',
+  android: '',               // vacío = pre-registro. Cuando salga en Google Play, pegar aquí su enlace.
+  preregistro: 'https://www.instagram.com/montesbio/',  // a dónde va Android mientras no haya enlace
+  textos: [
+    'Perder un pez es difícil.',
+    'No se escapa de la pecera.',
+    'Lo fácil es perderlo de otra forma: muchos peces no pasan de su primer mes.',
+    'Te enseñamos cómo evitarlo.'
+  ],
+  titularFinal: 'Que no le pase al tuyo.',
+  subtitulo: 'MontesBio te dice qué medir, cuándo cambiar el agua y te avisa antes de que haya un problema. Con Nahu, una IA que conoce tu acuario.',
+  nota: 'Gratis para tu primer acuario.'
+};
+</script>
+<style>
+:root{--bg:#0F2E2B;--bg2:#1B6B63;--fg:#F6EFE2;--acc:#E2703A;--soft:#7FD3C4}
+:root[data-tema="halloween"]{--bg:#1d1026;--bg2:#3b1d4a;--fg:#f7ead9;--acc:#ff7a1a;--soft:#c9a3ff}
+:root[data-tema="navidad"]{--bg:#0d2a1f;--bg2:#7a1424;--fg:#fbf6ee;--acc:#d9a441;--soft:#e8f3ff}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(120% 90% at 50% 100%,var(--bg2),var(--bg));color:var(--fg);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#fx{position:fixed;inset:0;pointer-events:none}
+.stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#fish{width:min(46vw,220px);transition:transform 1.2s cubic-bezier(.4,0,.2,1),opacity .6s}
+#fish.swim{animation:swim 3.2s ease-in-out infinite}
+@keyframes swim{0%,100%{transform:translate(-8px,0) rotate(-3deg)}50%{transform:translate(8px,-10px) rotate(3deg)}}
+#line{min-height:5.2em;margin-top:28px;font-size:clamp(22px,6.4vw,34px);font-weight:800;line-height:1.15;max-width:620px;opacity:0;transition:opacity .5s,transform .5s;transform:translateY(8px)}
+#line.on{opacity:1;transform:none}
+.skip{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:13px;opacity:.6}
+#end{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .7s}
+#end.on{opacity:1;pointer-events:auto}
+.card{max-width:520px;width:100%;text-align:center}
+.card h1{font-size:clamp(32px,9vw,48px);line-height:1.02;margin:18px 0 12px;font-weight:900}
+.card p{font-size:17px;line-height:1.45;opacity:.92}
+.tag{display:inline-block;background:var(--acc);color:#fff;font-weight:800;font-size:12px;letter-spacing:.14em;padding:6px 12px;border-radius:999px}
+.cta{display:block;margin:26px auto 10px;background:var(--acc);color:#fff;text-decoration:none;font-weight:800;font-size:19px;padding:18px 22px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.alt{font-size:14px;opacity:.8}.alt a{color:var(--soft)}
+.free{margin-top:6px;color:var(--soft);font-weight:700}
+.mini{display:block;width:84px;margin:0 auto 10px}
+</style></head>
+<body>
+<canvas id="fx"></canvas>
+<div class="stage" id="intro">
+  <svg id="fish" class="swim" viewBox="0 0 220 140" aria-label="Kiko">
+    <defs><linearGradient id="b" x1="0" x2="1"><stop offset="0" stop-color="#3a5bd9"/><stop offset="1" stop-color="#5f84ff"/></linearGradient></defs>
+    <path d="M20 70 C5 30 0 20 30 30 C45 45 50 55 60 62 C55 40 70 25 80 40 L78 62 Z" fill="#d93a3a" opacity=".9"/>
+    <path d="M20 70 C5 110 0 120 30 110 C45 95 50 85 60 78 C55 100 70 115 80 100 L78 78 Z" fill="#d93a3a" opacity=".9"/>
+    <path d="M100 30 C120 10 150 15 150 35 L130 50 Z M100 110 C120 130 150 125 150 105 L130 90 Z" fill="#d93a3a" opacity=".85"/>
+    <ellipse cx="135" cy="70" rx="62" ry="34" fill="url(#b)"/>
+    <circle cx="175" cy="62" r="9" fill="#fff"/><circle cx="178" cy="62" r="5" fill="#111"/>
+    <path d="M188 78 q6 3 0 6" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </svg>
+  <div id="line"></div>
+  <div class="skip">Toca para saltar</div>
+</div>
+<div id="end"><div class="card">
+  <svg class="mini" viewBox="0 0 220 140"><ellipse cx="135" cy="70" rx="62" ry="34" fill="#5f84ff"/><path d="M78 62 L20 30 L30 70 L20 110 L78 78Z" fill="#d93a3a"/><circle cx="175" cy="62" r="9" fill="#fff"/><circle cx="178" cy="62" r="5" fill="#111"/></svg>
+  <span class="tag">KIKO ESTÁ BIEN</span>
+  <h1 id="h1"></h1>
+  <p id="sub"></p>
+  <a class="cta" id="cta" href="#">Descargar MontesBio</a>
+  <p class="free" id="nota"></p>
+  <p class="alt" id="alt"></p>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+document.documentElement.dataset.tema=CONFIG.tema;
+const q=new URLSearchParams(location.search), src=q.get('src')||q.get('s')||'directo';
+const ua=navigator.userAgent||'';
+const isIOS=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isAndroid=/Android/i.test(ua);
+function setupEnd(){
+  $('h1').textContent=CONFIG.titularFinal; $('sub').textContent=CONFIG.subtitulo; $('nota').textContent=CONFIG.nota;
+  const cta=$('cta'), alt=$('alt');
+  if(isIOS){cta.href=CONFIG.ios;cta.textContent='Descargar en App Store';alt.innerHTML=`¿Tienes Android? <a href="${CONFIG.android||CONFIG.preregistro}">${CONFIG.android?'Google Play':'Avísame cuando salga'}</a>`}
+  else if(isAndroid){cta.href=CONFIG.android||CONFIG.preregistro;cta.textContent=CONFIG.android?'Descargar en Google Play':'Avísame cuando salga en Android';alt.innerHTML=CONFIG.android?'':'Ya disponible en iPhone. En Android, muy pronto.'}
+  else{cta.href=CONFIG.ios;cta.textContent='Ver en App Store';alt.innerHTML=`Abre esta página en tu móvil. <a href="${CONFIG.android||CONFIG.preregistro}">Android</a>`}
+}
+let i=0,done=false,timer;
+function next(){
+  if(done)return; const l=$('line'); l.classList.remove('on');
+  setTimeout(()=>{ if(i<CONFIG.textos.length){l.textContent=CONFIG.textos[i++];l.classList.add('on');timer=setTimeout(next,i===CONFIG.textos.length?2400:1700)} else finish() },450);
+}
+function finish(){ if(done)return; done=true; clearTimeout(timer); $('fish').style.opacity=0; $('line').style.opacity=0; $("intro").style.display="none"; setupEnd(); setTimeout(()=>$('end').classList.add('on'),300); document.body.style.overflow='auto'}
+$('intro').addEventListener('click',finish);
+setTimeout(next,700);
+/* Efectos de fondo por tema: burbujas, nieve u hojas */
+const c=$('fx'),x=c.getContext('2d');let W,H,P=[];
+function rs(){W=c.width=innerWidth*devicePixelRatio;H=c.height=innerHeight*devicePixelRatio}addEventListener('resize',rs);rs();
+for(let k=0;k<40;k++)P.push({x:Math.random(),y:Math.random(),r:2+Math.random()*6,v:.0006+Math.random()*.0016,w:Math.random()*6});
+(function loop(t){x.clearRect(0,0,W,H);
+ for(const p of P){const dir=CONFIG.tema==='normal'?-1:1;p.y+=p.v*dir;if(p.y<-.05)p.y=1.05;if(p.y>1.05)p.y=-.05;
+  const px=(p.x+Math.sin(t/1400+p.w)*.01)*W,py=p.y*H,r=p.r*devicePixelRatio;x.beginPath();
+  if(CONFIG.tema==='halloween'){x.fillStyle='rgba(255,122,26,.35)';x.ellipse(px,py,r*1.4,r*.7,p.w,0,7);x.fill()}
+  else if(CONFIG.tema==='navidad'){x.fillStyle='rgba(255,255,255,.7)';x.arc(px,py,r*.6,0,7);x.fill()}
+  else{x.strokeStyle='rgba(246,239,226,.35)';x.lineWidth=1.2*devicePixelRatio;x.arc(px,py,r,0,7);x.stroke()}}
+ requestAnimationFrame(loop)})(0);
+</script>
+</body></html>
